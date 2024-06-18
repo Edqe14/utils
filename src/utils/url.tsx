@@ -16,16 +16,14 @@ import { useEncoding } from "@/hooks/useEncoding";
 import { useChanged } from "@/hooks/useChanged";
 import { PageDetail } from "@/lib/navigation";
 
-export default function Base64({ detail }: { detail: PageDetail }) {
-  const { encoding, EncodingSelector } = useEncoding();
+export default function Binary({ detail }: { detail: PageDetail }) {
   const { input, output, action, setAction, setInput, setOutput } =
     useTransformer(
       {
-        encode: (value) => Buffer.from(value).toString("base64"),
-        decode: (value) => Buffer.from(value, "base64").toString(encoding),
+        encode: (value) => encodeURIComponent(value),
+        decode: (value) => decodeURIComponent(value),
       },
-      "encode",
-      [encoding]
+      "encode"
     );
 
   // when action changes
@@ -69,8 +67,7 @@ export default function Base64({ detail }: { detail: PageDetail }) {
                 Decode
               </CardTitle>
               <CardDescription>
-                Decode {detail.title.toLowerCase()} to {encoding.toUpperCase()}{" "}
-                format.
+                Decode {detail.title.toLowerCase()} to text format.
               </CardDescription>
             </CardHeader>
           </Card>
@@ -91,9 +88,6 @@ export default function Base64({ detail }: { detail: PageDetail }) {
 
         <div className="grid w-full gap-2">
           <Label>Output</Label>
-
-          {action === "decode" && <EncodingSelector />}
-
           <Textarea
             onClick={(ev) => (ev.target as HTMLInputElement).select()}
             readOnly

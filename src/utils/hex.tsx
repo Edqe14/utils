@@ -16,13 +16,13 @@ import { useEncoding } from "@/hooks/useEncoding";
 import { useChanged } from "@/hooks/useChanged";
 import { PageDetail } from "@/lib/navigation";
 
-export default function Base64({ detail }: { detail: PageDetail }) {
+export default function Hex({ detail }: { detail: PageDetail }) {
   const { encoding, EncodingSelector } = useEncoding();
   const { input, output, action, setAction, setInput, setOutput } =
     useTransformer(
       {
-        encode: (value) => Buffer.from(value).toString("base64"),
-        decode: (value) => Buffer.from(value, "base64").toString(encoding),
+        encode: (value) => Buffer.from(value).toString("hex"),
+        decode: (value) => Buffer.from(value, "hex").toString(encoding),
       },
       "encode",
       [encoding]

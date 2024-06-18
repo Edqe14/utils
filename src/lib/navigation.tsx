@@ -17,7 +17,21 @@ export const paths = [
       },
     },
   },
-];
+  {
+    id: "jwt",
+    title: "JWT",
+    childrens: {
+      "/jwt-debug": {
+        title: "Debug",
+      },
+      "/jwt-generate": {
+        title: "Generate",
+      },
+    },
+  },
+] as const;
+
+export type PageDetail = (typeof paths)[0]["childrens"]["/base64"];
 
 export const allPaths = paths
   .flatMap((path) => path.childrens)

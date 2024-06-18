@@ -1,4 +1,4 @@
-import { allPaths, paths } from "@/lib/navigation";
+import { allPaths } from "@/lib/navigation";
 import { Metadata, ResolvingMetadata } from "next";
 
 export type PageProps = {
@@ -24,7 +24,9 @@ export const generateMetadata = async (
 };
 
 export default async function UtilityPage({ params }: PageProps) {
-  const page = await import(`@/utils/${params.util}`).catch(() => null);
+  const page = await import(
+    `@/utils/${params.util.replaceAll("-", "/")}`
+  ).catch(() => null);
 
   if (!page) {
     return <h1>404</h1>;
@@ -39,7 +41,7 @@ export default async function UtilityPage({ params }: PageProps) {
         <h2 className="font-medium">{navigationDetail.title}</h2>
       </header>
 
-      <Page />
+      <Page detail={navigationDetail} />
     </section>
   );
 }

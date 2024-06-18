@@ -26,13 +26,14 @@ export const Sidebar = () => {
             <AccordionTrigger className="px-4">{group.title}</AccordionTrigger>
             <AccordionContent className="px-4 flex gap-1 flex-wrap">
               {Object.entries(group.childrens).map(([path, child]) => (
-                <Button
-                  variant={currentPath === path ? "secondary" : "ghost"}
-                  asChild
-                  key={path}
-                >
-                  <Link href={path}>{child.title}</Link>
-                </Button>
+                <Link href={path} key={path} className="block w-full">
+                  <Button
+                    variant={currentPath === path ? "secondary" : "outline"}
+                    className="w-full"
+                  >
+                    {child.title}
+                  </Button>
+                </Link>
               ))}
             </AccordionContent>
           </AccordionItem>
