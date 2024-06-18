@@ -17,7 +17,7 @@ export const Sidebar = () => {
   return (
     <aside style={{ gridArea: "aside" }}>
       <Link href="/">
-        <h1 className="p-4">Utils@Edqe</h1>
+        <h1 className="p-4 font-medium">Utils @Edqe</h1>
       </Link>
 
       <Accordion type="multiple">
