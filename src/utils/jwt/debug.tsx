@@ -68,7 +68,7 @@ export default function JwtDebug() {
           placeholder="Paste your JWT token here"
           onChange={(ev) => setInput(ev.target.value)}
         />
-        <span className="text-sm text-zinc-400">
+        <span className="text-xs text-zinc-400">
           All actions are done in your computer.
         </span>
       </div>

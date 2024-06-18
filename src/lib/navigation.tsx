@@ -34,7 +34,14 @@ export const paths = [
 export type PageDetail = (typeof paths)[0]["childrens"]["/base64"];
 
 export const allPaths = paths
-  .flatMap((path) => path.childrens)
+  .flatMap((path) =>
+    Object.fromEntries(
+      Object.entries(path.childrens).map(([key, value]) => [
+        key,
+        { ...value, parentName: path.title },
+      ])
+    )
+  )
   .reduce(
     (acc, path) => ({ ...acc, ...path }),
     {} as Record<string, { title: string }>

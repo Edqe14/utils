@@ -38,7 +38,12 @@ export default async function UtilityPage({ params }: PageProps) {
   return (
     <section>
       <header className="px-5 py-4">
-        <h2 className="font-medium">{navigationDetail.title}</h2>
+        <h2 className="font-medium">
+          {navigationDetail.parentName
+            ? `${navigationDetail.parentName} - `
+            : null}{" "}
+          {navigationDetail.title}
+        </h2>
       </header>
 
       <Page detail={navigationDetail} />
