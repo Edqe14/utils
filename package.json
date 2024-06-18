@@ -19,6 +19,7 @@
     "@raresail/react-ionicons": "^2.0.0",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
+    "jose": "^5.4.0",
     "next": "14.0.4",
     "next-themes": "^0.3.0",
     "react": "^18",
