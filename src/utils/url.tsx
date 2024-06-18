@@ -12,7 +12,6 @@ import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
 import { EllipsisVerticalOutline } from "@raresail/react-ionicons";
 import { useTransformer } from "@/hooks/useTransformer";
-import { useEncoding } from "@/hooks/useEncoding";
 import { useChanged } from "@/hooks/useChanged";
 import { PageDetail } from "@/lib/navigation";
 
