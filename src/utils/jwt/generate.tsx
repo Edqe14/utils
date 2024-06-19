@@ -138,62 +138,64 @@ export default function JwtGenerate() {
       </div>
 
       <section className="flex gap-2">
-        <div className="flex flex-col gap-2">
-          <Label htmlFor="algorithm">Algorithm</Label>
-          <Select
-            name="algorithm"
-            value={algorithm}
-            onValueChange={(value) => setAlgorithm(value as JWTAlgorithms)}
-          >
-            <SelectTrigger className="w-[180px]">
-              <SelectValue placeholder="Select an algorithm" />
-            </SelectTrigger>
-            <SelectContent>
-              {Object.entries(signingAlgorithms).map(([key, algorithms]) => (
-                <SelectGroup key={key}>
-                  <SelectLabel className="capitalize">{key}</SelectLabel>
+        <section className="flex flex-col gap-3">
+          <div className="flex flex-col gap-2">
+            <Label htmlFor="algorithm">Algorithm</Label>
+            <Select
+              name="algorithm"
+              value={algorithm}
+              onValueChange={(value) => setAlgorithm(value as JWTAlgorithms)}
+            >
+              <SelectTrigger className="w-[180px]">
+                <SelectValue placeholder="Select an algorithm" />
+              </SelectTrigger>
+              <SelectContent>
+                {Object.entries(signingAlgorithms).map(([key, algorithms]) => (
+                  <SelectGroup key={key}>
+                    <SelectLabel className="capitalize">{key}</SelectLabel>
 
-                  {algorithms.map((algorithm) => (
-                    <SelectItem key={algorithm} value={algorithm}>
-                      {algorithm}
-                    </SelectItem>
-                  ))}
-                </SelectGroup>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
+                    {algorithms.map((algorithm) => (
+                      <SelectItem key={algorithm} value={algorithm}>
+                        {algorithm}
+                      </SelectItem>
+                    ))}
+                  </SelectGroup>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
 
-        <div className="grid gap-2">
-          <Label>Expires in</Label>
-          <TimePickerDemo date={duration} setDate={setDuration} />
-        </div>
+          <div className="flex flex-col gap-2">
+            <Label>Expires in</Label>
+            <TimePickerDemo date={duration} setDate={setDuration} />
+          </div>
+        </section>
+
+        <section className="grid w-full gap-2">
+          <Label>Secret</Label>
+
+          {signingAlgorithms.symmetric.includes(algorithm as any) && (
+            <Input
+              value={secret}
+              placeholder="Insert your JWT token secret here"
+              onChange={(ev) => setSecret(ev.target.value)}
+            />
+          )}
+
+          {signingAlgorithms.asymmetric.includes(algorithm as any) && (
+            <Textarea
+              value={secret}
+              rows={10}
+              placeholder="Insert your private key (PCKS#8) here"
+              onChange={(ev) => setSecret(ev.target.value)}
+            />
+          )}
+
+          <span className="text-xs text-zinc-400">
+            All actions are done in your computer.
+          </span>
+        </section>
       </section>
-
-      <div className="grid w-full gap-2">
-        <Label>Secret</Label>
-
-        {signingAlgorithms.symmetric.includes(algorithm as any) && (
-          <Input
-            value={secret}
-            placeholder="Insert your JWT token secret here"
-            onChange={(ev) => setSecret(ev.target.value)}
-          />
-        )}
-
-        {signingAlgorithms.asymmetric.includes(algorithm as any) && (
-          <Textarea
-            value={secret}
-            rows={10}
-            placeholder="Insert your private key (PCKS#8) here"
-            onChange={(ev) => setSecret(ev.target.value)}
-          />
-        )}
-
-        <span className="text-xs text-zinc-400">
-          All actions are done in your computer.
-        </span>
-      </div>
 
       <EllipsisVerticalOutline className="opacity-50 mx-auto" />
 
