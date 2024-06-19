@@ -7,8 +7,26 @@ import { Textarea } from "@/components/ui/textarea";
 import { useJsonInput } from "@/hooks/useJsonInput";
 import { useCallback, useEffect, useRef, useState } from "react";
 
-import { SignJWT } from "jose";
+import { importPKCS8, SignJWT } from "jose";
 import { TimePickerDemo } from "@/components/ui/time-picker";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { EllipsisVerticalOutline } from "@raresail/react-ionicons";
+
+const signingAlgorithms = {
+  symmetric: ["HS256", "HS384", "HS512"],
+  asymmetric: ["RS256", "RS384", "RS512", "PS256", "PS384", "PS512"],
+} as const;
+
+type JWTAlgorithms =
+  (typeof signingAlgorithms)[keyof typeof signingAlgorithms][number];
 
 const getExpirationDate = (date: Date) => {
   if (
@@ -32,12 +50,15 @@ const getExpirationDate = (date: Date) => {
 const generateJWT = async (
   payload: Record<string, any>,
   secret: string,
+  algorithm: JWTAlgorithms = "HS256",
   expireAt?: Date
 ) => {
-  const secretKey = Buffer.from(secret);
+  const secretKey = signingAlgorithms.asymmetric.includes(algorithm as any)
+    ? await importPKCS8(secret, algorithm)
+    : Buffer.from(secret);
 
   const jwt = new SignJWT(payload)
-    .setProtectedHeader({ alg: "HS256", typ: "JWT" })
+    .setProtectedHeader({ alg: algorithm, typ: "JWT" })
     .setIssuedAt();
 
   if (expireAt) {
@@ -48,6 +69,7 @@ const generateJWT = async (
 };
 
 export default function JwtGenerate() {
+  const [algorithm, setAlgorithm] = useState<JWTAlgorithms>("HS256");
   const [secret, setSecret] = useState("");
   const [input, setInput] = useState("");
   const [payload, setPayload] = useState<Record<string, any> | null>(null);
@@ -75,37 +97,26 @@ export default function JwtGenerate() {
   const payloadRef = useRef<HTMLTextAreaElement>(null);
 
   useJsonInput(payloadRef);
-
   useEffect(() => {
     if (!payload || !secret) return;
 
     let cancelled = false;
 
-    generateJWT(payload, secret, getExpirationDate(duration)).then((jwt) => {
-      if (cancelled) return;
+    generateJWT(payload, secret, algorithm, getExpirationDate(duration)).then(
+      (jwt) => {
+        if (cancelled) return;
 
-      setJWT(jwt);
-    });
+        setJWT(jwt);
+      }
+    );
 
     return () => {
       cancelled = true;
     };
-  }, [payload, secret, duration]);
+  }, [payload, secret, algorithm, duration]);
 
   return (
     <section className="px-5 grid gap-4">
-      <div className="grid w-full gap-2">
-        <Label>Secret</Label>
-        <Input
-          value={secret}
-          placeholder="Insert your JWT token secret here"
-          onChange={(ev) => setSecret(ev.target.value)}
-        />
-        <span className="text-xs text-zinc-400">
-          All actions are done in your computer.
-        </span>
-      </div>
-
       <div className="grid w-full gap-2">
         <Label>Payload</Label>
 
@@ -126,16 +137,69 @@ export default function JwtGenerate() {
         />
       </div>
 
-      <section>
-        <div className="grid w-full gap-2">
+      <section className="flex gap-2">
+        <div className="flex flex-col gap-2">
+          <Label htmlFor="algorithm">Algorithm</Label>
+          <Select
+            name="algorithm"
+            value={algorithm}
+            onValueChange={(value) => setAlgorithm(value as JWTAlgorithms)}
+          >
+            <SelectTrigger className="w-[180px]">
+              <SelectValue placeholder="Select an algorithm" />
+            </SelectTrigger>
+            <SelectContent>
+              {Object.entries(signingAlgorithms).map(([key, algorithms]) => (
+                <SelectGroup key={key}>
+                  <SelectLabel className="capitalize">{key}</SelectLabel>
+
+                  {algorithms.map((algorithm) => (
+                    <SelectItem key={algorithm} value={algorithm}>
+                      {algorithm}
+                    </SelectItem>
+                  ))}
+                </SelectGroup>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+
+        <div className="grid gap-2">
           <Label>Expires in</Label>
           <TimePickerDemo date={duration} setDate={setDuration} />
         </div>
       </section>
 
+      <div className="grid w-full gap-2">
+        <Label>Secret</Label>
+
+        {signingAlgorithms.symmetric.includes(algorithm as any) && (
+          <Input
+            value={secret}
+            placeholder="Insert your JWT token secret here"
+            onChange={(ev) => setSecret(ev.target.value)}
+          />
+        )}
+
+        {signingAlgorithms.asymmetric.includes(algorithm as any) && (
+          <Textarea
+            value={secret}
+            rows={10}
+            placeholder="Insert your private key (PCKS#8) here"
+            onChange={(ev) => setSecret(ev.target.value)}
+          />
+        )}
+
+        <span className="text-xs text-zinc-400">
+          All actions are done in your computer.
+        </span>
+      </div>
+
+      <EllipsisVerticalOutline className="opacity-50 mx-auto" />
+
       <div className="grid w-full gap-2 mt-4">
         <Label>Generated JWT</Label>
-        <Textarea readOnly value={jwt} />
+        <Textarea readOnly value={jwt} rows={8} />
       </div>
     </section>
   );
