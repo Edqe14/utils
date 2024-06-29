@@ -1,5 +1,6 @@
 "use client";
 
+import { Container } from "@/components/container";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
@@ -53,7 +54,7 @@ export default function JwtDebug() {
   }, [input]);
 
   return (
-    <section className="px-5 grid gap-4">
+    <Container>
       {error && (
         <Alert variant="destructive">
           <AlertTitle>Error</AlertTitle>
@@ -95,6 +96,6 @@ export default function JwtDebug() {
           <Textarea value={parsed ? parsed.signature : ""} rows={15} />
         </div>
       </section>
-    </section>
+    </Container>
   );
 }

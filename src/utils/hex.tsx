@@ -15,6 +15,7 @@ import { useTransformer } from "@/hooks/useTransformer";
 import { useEncoding } from "@/hooks/useEncoding";
 import { useChanged } from "@/hooks/useChanged";
 import { PageDetail } from "@/lib/navigation";
+import { Container } from "@/components/container";
 
 export default function Hex({ detail }: { detail: PageDetail }) {
   const { encoding, EncodingSelector } = useEncoding();
@@ -35,7 +36,7 @@ export default function Hex({ detail }: { detail: PageDetail }) {
   });
 
   return (
-    <section className="px-5 grid gap-4">
+    <Container>
       <section>
         <RadioGroup value={action} className="grid grid-cols-2">
           <Card
@@ -102,6 +103,6 @@ export default function Hex({ detail }: { detail: PageDetail }) {
           />
         </div>
       </section>
-    </section>
+    </Container>
   );
 }

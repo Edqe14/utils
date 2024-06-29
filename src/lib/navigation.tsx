@@ -29,6 +29,18 @@ export const paths = [
       },
     },
   },
+  {
+    id: "enc-dec-rypt",
+    title: "Encryption & Decryption",
+    childrens: {
+      "/encdec-secret": {
+        title: "Generate Secret",
+      },
+      "/encdec-keypair": {
+        title: "Generate Key Pair",
+      },
+    },
+  },
 ] as const;
 
 export type PageDetail = (typeof paths)[0]["childrens"]["/base64"];

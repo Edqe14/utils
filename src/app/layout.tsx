@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { Sidebar } from "@/components/sidebar";
-import { Container } from "@/components/container";
+import { Layout } from "@/components/layout";
 
 export const metadata: Metadata = {
   title: "Utility - Home",
@@ -16,7 +16,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body className="dark">
-        <Container>
+        <Layout>
           <Sidebar />
 
           <main
@@ -25,7 +25,7 @@ export default function RootLayout({
           >
             {children}
           </main>
-        </Container>
+        </Layout>
       </body>
     </html>
   );

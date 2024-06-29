@@ -19,6 +19,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { EllipsisVerticalOutline } from "@raresail/react-ionicons";
+import { Container } from "@/components/container";
 
 const signingAlgorithms = {
   symmetric: ["HS256", "HS384", "HS512"],
@@ -116,7 +117,7 @@ export default function JwtGenerate() {
   }, [payload, secret, algorithm, duration]);
 
   return (
-    <section className="px-5 grid gap-4">
+    <Container>
       <div className="grid w-full gap-2">
         <Label>Payload</Label>
 
@@ -203,6 +204,6 @@ export default function JwtGenerate() {
         <Label>Generated JWT</Label>
         <Textarea readOnly value={jwt} rows={8} />
       </div>
-    </section>
+    </Container>
   );
 }

@@ -1,20 +1,14 @@
-"use client";
-
-import {
-  ResizableHandle,
-  ResizablePanel,
-  ResizablePanelGroup,
-} from "@/components/ui/resizable";
+import { cn } from "@/lib/utils";
 import { ReactNode } from "react";
 
-export const Container = ({ children }: { children: ReactNode[] }) => {
+export const Container = ({
+  children,
+  className,
+}: {
+  children: ReactNode;
+  className?: string;
+}) => {
   return (
-    <ResizablePanelGroup direction="horizontal" className="h-screen">
-      <ResizablePanel defaultSize={20} maxSize={20}>
-        {children[0]}
-      </ResizablePanel>
-      <ResizableHandle />
-      <ResizablePanel defaultSize={80}>{children[1]}</ResizablePanel>
-    </ResizablePanelGroup>
+    <section className={cn("px-5 grid gap-4", className)}>{children}</section>
   );
 };
