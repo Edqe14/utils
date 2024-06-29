@@ -8,31 +8,39 @@ import {
   Select,
   SelectContent,
   SelectGroup,
-  SelectLabel,
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
-import { exportJWK, generateSecret } from "jose";
+import { exportPKCS8, exportSPKI, generateKeyPair } from "jose";
 import { useCallback, useEffect, useState } from "react";
 
-const Algorithms = ["HS256", "HS384", "HS512"] as const;
+const Algorithms = [
+  "RS256",
+  "RS384",
+  "RS512",
+  "PS256",
+  "PS384",
+  "PS512",
+] as const;
 type Algorithm = (typeof Algorithms)[number];
 
 export default function GenerateSecret() {
-  const [jwk, setJWK] = useState("");
-  const [algorithm, setAlgorithm] = useState<Algorithm>("HS256");
+  const [publicKey, setPublic] = useState("");
+  const [privateKey, setPrivate] = useState("");
+  const [algorithm, setAlgorithm] = useState<Algorithm>("PS256");
 
-  const generateJwk = useCallback(async () => {
-    const newJwk = await exportJWK(
-      await generateSecret(algorithm, { extractable: true })
-    );
+  const generateKey = useCallback(async () => {
+    const { publicKey, privateKey } = await generateKeyPair(algorithm, {
+      extractable: true,
+    });
 
-    setJWK(newJwk.k!);
+    setPublic(await exportSPKI(publicKey));
+    setPrivate(await exportPKCS8(privateKey));
   }, [algorithm]);
 
   useEffect(() => {
-    generateJwk();
+    generateKey();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [algorithm]);
 
@@ -61,10 +69,20 @@ export default function GenerateSecret() {
           </Select>
         </div>
 
-        <Button onClick={generateJwk}>Regenerate</Button>
+        <Button onClick={generateKey}>Regenerate</Button>
       </section>
 
-      <Textarea value={jwk} />
+      <section className="flex flex-wrap gap-2">
+        <div className="flex flex-col gap-2 flex-grow">
+          <Label htmlFor="public">Public Key (SPKI)</Label>
+          <Textarea name="public" value={publicKey} rows={32} />
+        </div>
+
+        <div className="flex flex-col gap-2 flex-grow">
+          <Label htmlFor="private">Private Key (PCKS#8)</Label>
+          <Textarea name="private" value={privateKey} rows={32} />
+        </div>
+      </section>
     </Container>
   );
 }
