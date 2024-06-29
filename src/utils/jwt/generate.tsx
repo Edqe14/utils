@@ -171,7 +171,7 @@ export default function JwtGenerate() {
           </div>
         </section>
 
-        <section className="grid w-full gap-2">
+        <section className="flex flex-col w-full gap-2">
           <Label>Secret</Label>
 
           {signingAlgorithms.symmetric.includes(algorithm as any) && (
