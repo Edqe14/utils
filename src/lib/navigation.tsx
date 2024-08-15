@@ -39,6 +39,18 @@ export const paths = [
       "/encdec-keypair": {
         title: "Generate Key Pair",
       },
+      "/encdec-hash": {
+        title: "Hash",
+      },
+    },
+  },
+  {
+    id: "misc",
+    title: "Miscellaneous",
+    childrens: {
+      "/misc-medium": {
+        title: "Medium Bypass",
+      },
     },
   },
 ] as const;
